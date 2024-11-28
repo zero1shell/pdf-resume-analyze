@@ -10,6 +10,7 @@ export const runtime = "edge";
 
 const config = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
+  
 });
 const openai = new OpenAIApi(config);
 
@@ -43,7 +44,7 @@ export async function POST(req: Request) {
     };
 
     const response = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo",
+      model: "gpt-4o",
       messages: [
         prompt,
         ...messages.filter((message: Message) => message.role === "user"),
@@ -69,5 +70,7 @@ export async function POST(req: Request) {
       },
     });
     return new StreamingTextResponse(stream);
-  } catch (error) {}
+  } catch (error) {
+    console.error(error); return NextResponse.json({ error: "An error occurred" }, { status: 500 });
+  }
 }
